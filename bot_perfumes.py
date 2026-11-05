@@ -111,4 +111,168 @@ def shopify(base, q):
                 for v in p["variants"][:1]:
                     if v.get("available") is False:
                         continue
-                    items.append(d
+                    items.append(dict(id=f"{base}|{p['id']}", tienda=base, nombre=p["title"],
+                                      marca=p.get("vendor", ""), precio=num(v["price"]),
+                                      lista=num(v.get("compare_at_price")),
+                                      url=f"{base}/products/{p['handle']}"))
+            time.sleep(0.5)
+        _cache_catalogo[base] = items
+    return _cache_catalogo[base] if q == BUSQUEDAS[0] else []
+
+
+def woo(base, q):
+    out = []
+    data = get_json(f"{base}/wp-json/wc/store/v1/products?search={urllib.parse.quote(q)}&per_page=100")
+    if not isinstance(data, list):
+        raise ValueError("no Woo")
+    for p in data:
+        pr = p["prices"]
+        div = 10 ** int(pr.get("currency_minor_unit", 0))
+        out.append(dict(id=f"{base}|{p['id']}", tienda=base, nombre=p["name"],
+                        marca=" ".join(c["name"] for c in p.get("brands", []) or []) if p.get("brands") else "",
+                        precio=num(pr["price"]) / div, lista=num(pr.get("regular_price")) / div,
+                        url=p["permalink"]))
+    return out
+
+
+ADAPTADORES = {"vtex": vtex, "shopify": shopify, "woo": woo}
+
+
+def detectar(base):
+    for nombre, fn in ADAPTADORES.items():
+        try:
+            res = fn(base, BUSQUEDAS[0])
+            if res:
+                return nombre
+        except Exception:
+            continue
+        finally:
+            _cache_catalogo.pop(base, None)
+    return None
+
+
+def cargar(path, default):
+    try:
+        return json.loads(path.read_text())
+    except Exception:
+        return default
+
+
+def evaluar(p, hist):
+    precio, lista = p["precio"], p["lista"]
+    motivos = []
+    if lista > precio:
+        pct = (lista - precio) / lista * 100
+        ahorro = lista - precio
+        if pct >= DESC_ERROR_PCT:
+            motivos.append(f"Posible ERROR DE PRECIO: {pct:.0f}% bajo precio de lista")
+        elif pct >= DESC_MIN_PCT:
+            motivos.append(f"{pct:.0f}% de descuento vs lista")
+        if ahorro >= AHORRO_MIN_CLP and pct >= 25:
+            motivos.append(clp(f"Ahorro de ${ahorro:,.0f}"))
+    precios = hist.get(p["id"], [])
+    if len(precios) >= 3:
+        med = statistics.median(precios)
+        if med > 0 and precio <= med * (1 - BAJA_HIST_PCT / 100):
+            motivos.append(clp(f"{(1 - precio / med) * 100:.0f}% bajo su precio habitual (${med:,.0f})"))
+    return motivos
+
+
+def clp(s):
+    return s.replace(",", ".")
+
+
+def enviar(asunto, cuerpo):
+    user, pw, to = os.environ.get("SMTP_USER"), os.environ.get("SMTP_PASS"), os.environ.get("MAIL_TO")
+    if not (user and pw and to):
+        print("Faltan SMTP_USER / SMTP_PASS / MAIL_TO", file=sys.stderr)
+        sys.exit(1)
+    msg = MIMEText(cuerpo, "plain", "utf-8")
+    msg["Subject"], msg["From"], msg["To"] = asunto, user, to
+    with smtplib.SMTP_SSL("smtp.gmail.com", 465) as s:
+        s.login(user, pw)
+        s.send_message(msg)
+
+
+def correo_ofertas(ofertas):
+    ofertas.sort(key=lambda o: -o["score"])
+    lineas = []
+    for o in ofertas[:25]:
+        p = o["p"]
+        lineas.append(clp(f"{p['nombre']} ({p['marca']}) - {p['tienda'].split('//')[-1]}\n"
+                          f"  Precio: ${p['precio']:,.0f}  |  Lista: ${p['lista']:,.0f}\n")
+                      + "  " + " · ".join(o["motivos"]) + f"\n  {p['url']}\n")
+    cuerpo = ("Ofertas de perfumes detectadas:\n\n" + "\n".join(lineas) +
+              "\nOjo: confirma que el vendedor sea la tienda y que el precio/stock siga vigente. "
+              "Los errores de precio suelen anularse. Desconfia de precios muy bajos en tiendas chicas.")
+    enviar(f"🔥 {len(ofertas)} oferta(s) de perfumes - mejor: {ofertas[0]['p']['nombre'][:50]}", cuerpo)
+
+
+def main():
+    hist = cargar(HIST_FILE, {})
+    avisados = cargar(AVISADOS_FILE, {})
+    plat = cargar(PLAT_FILE, {})
+    productos, estado = {}, {}
+
+    for base in TIENDAS:
+        # redetecta si no hay plataforma guardada o si falto de datos la ultima vez
+        if not plat.get(base):
+            plat[base] = detectar(base)
+        if not plat[base]:
+            estado[base] = "sin API compatible (no VTEX/Shopify/Woo) o bloqueada"
+            continue
+        fn, n0 = ADAPTADORES[plat[base]], len(productos)
+        for q in BUSQUEDAS:
+            try:
+                for p in fn(base, q):
+                    productos[p["id"]] = p
+            except Exception as e:
+                print(f"[{plat[base]}] {base} '{q}': {e}", file=sys.stderr)
+                break
+            time.sleep(0.4)
+        estado[base] = f"{plat[base]}: {len(productos) - n0} productos"
+        if len(productos) == n0:
+            plat[base] = None  # reintenta deteccion la proxima vez
+    for b, s in estado.items():
+        print(f"{b} -> {s}")
+    print(f"{len(productos)} productos revisados")
+
+    ofertas = []
+    for p in productos.values():
+        if p["precio"] < PRECIO_MIN_VALIDO:
+            continue
+        texto = f"{p['nombre']} {p['marca']}"
+        if EXCLUIR.search(texto) or not MARCAS_OK.search(texto):
+            continue
+        motivos = evaluar(p, hist)
+        if motivos:
+            previo = avisados.get(p["id"])
+            if previo is None or p["precio"] < previo * 0.9:
+                desc = (p["lista"] - p["precio"]) / p["lista"] * 100 if p["lista"] > p["precio"] else 0
+                ofertas.append(dict(p=p, motivos=motivos, score=len(motivos) * 10 + desc))
+                avisados[p["id"]] = p["precio"]
+
+    for p in productos.values():
+        h = hist.setdefault(p["id"], [])
+        h.append(p["precio"])
+        del h[:-30]
+
+    HIST_FILE.write_text(json.dumps(hist))
+    AVISADOS_FILE.write_text(json.dumps(avisados))
+    PLAT_FILE.write_text(json.dumps(plat, indent=1))
+
+    if ofertas:
+        correo_ofertas(ofertas)
+        print(f"Correo enviado con {len(ofertas)} ofertas")
+    else:
+        print("Sin ofertas de impacto esta vez")
+
+    # Resumen de estado de tiendas: lunes, primera corrida del dia (UTC)
+    ahora = datetime.now(timezone.utc)
+    if ahora.weekday() == 0 and ahora.hour < 3:
+        enviar("Estado bot perfumes (semanal)",
+               "Tiendas monitoreadas:\n\n" + "\n".join(f"{b}: {s}" for b, s in estado.items()))
+
+
+if __name__ == "__main__":
+    main()
