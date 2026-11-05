@@ -1,4 +1,4 @@
-lo#!/usr/bin/env python3
+#!/usr/bin/env python3
 """Bot de ofertas / errores de tarifa para vuelos desde Chile."""
 import os, sqlite3, smtplib, statistics, time
 from datetime import date
