@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+lo#!/usr/bin/env python3
 """Bot de ofertas / errores de tarifa para vuelos desde Chile."""
 import os, sqlite3, smtplib, statistics, time
 from datetime import date
@@ -112,8 +112,6 @@ def meses():
     for i in range(MESES_ADELANTE):
         y, m = divmod(hoy.month - 1 + i, 12)
         yield f"{hoy.year + y}-{m + 1:02d}"
-
-
 def main():
     con = abrir_db()
     alertas = []
@@ -123,4 +121,29 @@ def main():
                 try:
                     ofertas = list(fuente_travelpayouts(o_, d_, mes))
                 except Exception as e:
-                    print
+                    print("error", o_, d_, mes, e)
+                    continue
+                for o in ofertas:
+                    motivo = evaluar(con, o)
+                    if motivo and not ya_avisado(con, o):
+                        alertas.append((o, motivo))
+                        con.execute("INSERT INTO avisados VALUES(?,?,?,?)",
+                                    (o["ruta"], o["fecha"], o["precio"], time.time()))
+                    con.execute("INSERT INTO precios VALUES(?,?,?,?)",
+                                (o["ruta"], o["fecha"], o["precio"], time.time()))
+                con.commit()
+                time.sleep(0.5)
+    if alertas:
+        alertas.sort(key=lambda x: x[0]["precio"])
+        texto = formatear(alertas[:15])
+        enviar_correo(texto)
+        enviar_whatsapp(texto)
+        print(texto)
+    else:
+        print("Sin ofertas nuevas.")
+
+
+if __name__ == "__main__":
+    main()
+
+
