@@ -21,7 +21,7 @@ jobs:
         env:
           SMTP_USER: ${{ secrets.SMTP_USER }}
           SMTP_PASS: ${{ secrets.SMTP_PASS }}
-          MAIL_TO: ${{ secrets.MAIL_TO }}
+          MAIL_TO: ${{ secrets.MAIL_TO || secrets.SMTP_USER }}
         run: python bot_perfumes.py
       - name: Guardar historial
         run: |
