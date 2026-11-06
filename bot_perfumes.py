@@ -17,6 +17,7 @@ from pathlib import Path
 # Agrega o quita tiendas aqui (solo el dominio base).
 TIENDAS = [
     "https://www.preunic.cl",
+    "https://productosdelujo.cl",
     "https://www.sallybeauty.cl",
     "https://www.paris.cl",
     "https://www.ripley.cl",
