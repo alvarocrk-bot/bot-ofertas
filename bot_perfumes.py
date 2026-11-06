@@ -45,7 +45,7 @@ EXCLUIR = re.compile(r"\b(replica|réplica|inspirad[oa]|alternativ[oa]|similar|i
                      r"muestra|miniatura|mini|tester|sin caja|usado|vac[ií]o|body mist|desodorante)\b", re.I)
 
 # Una oferta "de gran impacto" cumple AL MENOS UNO:
-DESC_MIN_PCT = 45          # % de descuento vs precio de lista
+DESC_MIN_PCT = 40          # % de descuento vs precio de lista
 DESC_ERROR_PCT = 65        # % que huele a error de precio
 AHORRO_MIN_CLP = 40000     # ahorro absoluto vs lista (con >=25% de descuento)
 BAJA_HIST_PCT = 35         # % bajo la mediana historica del mismo producto
