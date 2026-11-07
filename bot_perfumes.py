@@ -51,7 +51,8 @@ MARCAS_OK = re.compile(
     r"gaultier|givenchy|burberry|tom ford|prada|dolce|azzaro|herm[eè]s|bvlgari|bulgari|cartier|"
     r"montblanc|mugler|issey|lacoste|nautica|davidoff|jimmy choo|valentino|narciso|"
     r"ralph lauren|marc jacobs|chlo[eé]|gucci|loewe|creed|byredo|maison margiela|"
-    r"carolina|paco|jpg|kenzo|bentley|police|guess|adidas|ariana grande|britney|elizabeth arden", re.I)
+    r"carolina|paco|jpg|kenzo|bentley|police|guess|adidas|ariana grande|britney|elizabeth arden|armaf|lattafa|afnan|rasasi|haramain|alhambra|marly|xerjoff|amouage|nishane|initio|kilian|le labo|diptyque|penhaligon|kurkdjian|montale|mancera|nasomatto|jo malone|acqua di parma|\bedp\b|\bedt\b|\bedc\b|parfum|perfume\b|eau de|cologne|colonia|extrait|elixir"
+, re.I)
 EXCLUIR = re.compile(r"\b(replica|réplica|inspirad[oa]|alternativ[oa]|similar|imitaci[oó]n|decant|"
                      r"muestra|miniatura|mini|tester|sin caja|usado|vac[ií]o|body mist|desodorante)\b", re.I)
 
