@@ -22,6 +22,7 @@ jobs:
 
       - name: Correr bot
         env:
+          DESTINOS: "FLN,REC,MCZ,PUJ,CUN,ADZ"
           TRAVELPAYOUTS_TOKEN: ${{ secrets.TRAVELPAYOUTS_TOKEN }}
           SMTP_USER: ${{ secrets.SMTP_USER }}
           SMTP_PASS: ${{ secrets.SMTP_PASS }}
