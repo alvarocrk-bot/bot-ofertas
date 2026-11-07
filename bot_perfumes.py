@@ -39,7 +39,12 @@ TIENDAS = [
     "https://sairam.cl",
     "https://perfumeschic.cl",
     "https://www.eliteperfumes.cl",
-    "https://yauras.cl",
+    "https://maisonniche.cl",
+    "https://santiagoperfumes.cl",
+    "https://perfumesneroli.cl",
+    "https://www.cruzyvalencia.cl",
+    "https://misticaperfumes.cl",
+    "https://dperfumes.cl",
 ]
 BUSQUEDAS = [
     "perfume", "eau de parfum", "eau de toilette", "colonia hombre", "perfume mujer",
