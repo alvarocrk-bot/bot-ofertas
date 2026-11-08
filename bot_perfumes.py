@@ -45,6 +45,12 @@ TIENDAS = [
     "https://www.cruzyvalencia.cl",
     "https://misticaperfumes.cl",
     "https://dperfumes.cl",
+    "https://saideep.cl",
+    "https://lacasadelperfume.cl",
+    "https://joyperfumes.cl",
+    "https://laperfumeriaonline.cl",
+    "https://mperfumes.cl",
+    "https://www.ofertaperfumes.cl",
 ]
 BUSQUEDAS = [
     "perfume", "eau de parfum", "eau de toilette", "colonia hombre", "perfume mujer",
