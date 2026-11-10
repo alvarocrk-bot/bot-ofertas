@@ -95,10 +95,10 @@ MAX_OFERTAS_CORREO = 40    # maximo de ofertas por correo
 HIST_LARGO = 60            # cuantos precios guarda por producto
 
 # Lector alternativo (sitemap)
-PAGINAS_POR_CORRIDA = 120  # paginas de producto que lee por tienda en cada corrida
+PAGINAS_POR_CORRIDA = 40  # paginas de producto que lee por tienda en cada corrida
 HILOS = 4                  # peticiones en paralelo por tienda
 REINTENTO_DIAS = 7         # cada cuantos dias reintenta una tienda sin acceso
-DEADLINE_SEG = 14 * 60     # corta la corrida a los 14 min (el limite del workflow es 20)
+DEADLINE_SEG = 6 * 60     # corta la corrida a los 14 min (el limite del workflow es 20)
 
 HIST_FILE = Path("historial_perfumes.json")
 AVISADOS_FILE = Path("avisados_perfumes.json")
@@ -211,6 +211,8 @@ def woo(base, q):
         raise ValueError("no Woo")
     for p in data:
         pr = p["prices"]
+        if p.get("is_in_stock") is False or p.get("stock_status") in ("outofstock", "out_of_stock"):
+            continue
         div = 10 ** int(pr.get("currency_minor_unit", 0))
         out.append(dict(id=f"{base}|{p['id']}", tienda=base, nombre=p["name"],
                         marca=" ".join(c["name"] for c in p.get("brands", []) or []) if p.get("brands") else "",
