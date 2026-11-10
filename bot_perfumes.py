@@ -442,6 +442,26 @@ def correo_ofertas(ofertas):
     enviar(f"🔥 {len(ofertas)} oferta(s) de perfumes - mejor: {ofertas[0]['p']['nombre'][:50]}", cuerpo)
 
 
+AGOTADO_RE = re.compile(r"agotad[oa]|sin stock|out[ -]of[ -]stock|sold[ -]out|no disponible|sin existencias", re.I)
+DISPONIBLE_LD_RE = re.compile(r'schema\.org/(InStock|LimitedAvailability|OnlineOnly)', re.I)
+AGOTADO_LD_RE = re.compile(r'schema\.org/(OutOfStock|SoldOut|Discontinued)', re.I)
+
+
+def agotado_en_pagina(url):
+    """Abre la pagina del producto y confirma si esta agotado. Si no puede, asume que hay stock."""
+    try:
+        html = get_text(url, timeout=15, max_bytes=2_000_000)
+    except Exception:
+        return False
+    ld = " ".join(LD_RE.findall(html))
+    if AGOTADO_LD_RE.search(ld):
+        return True
+    if DISPONIBLE_LD_RE.search(ld):
+        return False
+    sin_scripts = re.sub(r"<script.*?</script>|<style.*?</style>", " ", html, flags=re.S | re.I)
+    return bool(AGOTADO_RE.search(sin_scripts))
+
+
 def main():
     _T0[0] = time.time()
     hoy = date.today()
@@ -504,6 +524,9 @@ def main():
         if motivos:
             previo = avisados.get(p["id"])
             if previo is None or p["precio"] < previo * 0.9:
+                if p.get("url") and agotado_en_pagina(p["url"]):
+                    print(f"agotado, se descarta: {p['nombre']} ({p['tienda']})")
+                    continue
                 desc = (p["lista"] - p["precio"]) / p["lista"] * 100 if p["lista"] > p["precio"] else 0
                 ofertas.append(dict(p=p, motivos=motivos, score=len(motivos) * 10 + desc))
                 avisados[p["id"]] = p["precio"]
