@@ -8,6 +8,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: bot-perfumes
+  cancel-in-progress: false
+
 jobs:
   buscar:
     runs-on: ubuntu-latest
@@ -29,5 +33,5 @@ jobs:
           git config user.email "bot@users.noreply.github.com"
           git add historial_perfumes.json avisados_perfumes.json plataformas_perfumes.json
           git diff --staged --quiet || git commit -m "actualiza historial perfumes"
-          git pull --rebase
+          git pull --rebase -X theirs
           git push
