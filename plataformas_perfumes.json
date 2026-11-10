@@ -5,7 +5,7 @@
  "https://www.ripley.cl": null,
  "https://vypstore.cl": "sitemap",
  "https://www.parfums.cl": null,
- "https://elreydelosperfumes.cl": null,
+ "https://elreydelosperfumes.cl": "sitemap",
  "https://www.comprarenchile.cl": "shopify",
  "https://www.chileperfume.cl": "woo",
  "https://www.lodoro.cl": "shopify",
@@ -13,7 +13,7 @@
  "https://www.beautyperfumes.cl": "shopify",
  "https://www.perfumisimo.cl": "shopify",
  "https://productosdelujo.cl": "shopify",
- "https://dreamsparfums.cl": null,
+ "https://dreamsparfums.cl": "sitemap",
  "https://cosmetic.cl": "shopify",
  "https://www.nichostore.cl": "shopify",
  "https://www.zonaperfumes.cl": "woo",
@@ -36,16 +36,26 @@
  "https://laperfumeriaonline.cl": "sitemap",
  "https://mperfumes.cl": "woo",
  "https://www.ofertaperfumes.cl": "shopify",
- "_fallos": {},
+ "_fallos": {
+  "https://www.parfums.cl": "2026-11-10",
+  "https://www.paris.cl": "2026-11-10",
+  "https://www.ripley.cl": "2026-11-10",
+  "https://www.preunic.cl": "2026-11-10",
+  "https://www.sallybeauty.cl": "2026-11-10"
+ },
  "_offsets": {
-  "https://aromachil.cl": 240,
+  "https://aromachil.cl": 118,
   "https://perfumesprodigo.cl": 0,
-  "https://www.ohparfums.cl": 111,
-  "https://sairam.cl": 240,
-  "https://www.cruzyvalencia.cl": 9,
-  "https://lacasadelperfume.cl": 240,
-  "https://joyperfumes.cl": 240,
-  "https://laperfumeriaonline.cl": 240,
-  "https://vypstore.cl": 240
+  "https://www.ohparfums.cl": 102,
+  "https://sairam.cl": 360,
+  "https://www.cruzyvalencia.cl": 129,
+  "https://lacasadelperfume.cl": 360,
+  "https://joyperfumes.cl": 360,
+  "https://laperfumeriaonline.cl": 360,
+  "https://vypstore.cl": 360,
+  "https://elreydelosperfumes.cl": 0,
+  "https://dreamsparfums.cl": 240,
+  "https://www.preunic.cl": 0,
+  "https://www.sallybeauty.cl": 0
  }
 }
