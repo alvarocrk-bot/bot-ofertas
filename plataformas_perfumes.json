@@ -41,7 +41,8 @@
   "https://www.paris.cl": "2026-11-10",
   "https://www.ripley.cl": "2026-11-10",
   "https://www.preunic.cl": "2026-11-10",
-  "https://www.sallybeauty.cl": "2026-11-10"
+  "https://www.sallybeauty.cl": "2026-11-10",
+  "https://vypstore.cl": "2026-11-10"
  },
  "_offsets": {
   "https://aromachil.cl": 74,
@@ -52,7 +53,7 @@
   "https://lacasadelperfume.cl": 800,
   "https://joyperfumes.cl": 800,
   "https://laperfumeriaonline.cl": 800,
-  "https://vypstore.cl": 880,
+  "https://vypstore.cl": 920,
   "https://elreydelosperfumes.cl": 0,
   "https://dreamsparfums.cl": 600,
   "https://www.preunic.cl": 0,
