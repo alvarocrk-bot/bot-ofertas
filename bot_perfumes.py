@@ -46,13 +46,16 @@ TIENDAS = [
     "https://www.ohparfums.cl",
     "https://sairam.cl",
     "https://www.cruzyvalencia.cl",
-    "https://lacasadelperfume.cl",
     "https://joyperfumes.cl",
     "https://laperfumeriaonline.cl",
     "https://vypstore.cl",
     "https://www.parfums.cl",
     "https://elreydelosperfumes.cl",
     "https://dreamsparfums.cl",
+    "https://alishaperfumes.cl",
+    "https://theperfumeshop.cl",
+    "https://salcobrand.cl",
+
     # --- tiendas grandes (lo mas probable es que bloqueen al bot) ---
     "https://www.paris.cl",
     "https://www.ripley.cl",
