@@ -40,6 +40,8 @@ TIENDAS = [
     "https://saideep.cl",
     "https://mperfumes.cl",
     "https://www.ofertaperfumes.cl",
+    "https://www.mundoaromas.cl",
+
     # --- las que antes fallaban: ahora prueban el lector alternativo ---
     "https://aromachil.cl",
     "https://perfumesprodigo.cl",
