@@ -20,7 +20,7 @@
  "https://aromachil.cl": "sitemap",
  "https://perfumesprodigo.cl": "sitemap",
  "https://www.ohparfums.cl": null,
- "https://sairam.cl": "sitemap",
+ "https://sairam.cl": null,
  "https://perfumeschic.cl": "woo",
  "https://www.eliteperfumes.cl": "shopify",
  "https://yauras.cl": "shopify",
@@ -48,10 +48,10 @@
   "https://elreydelosperfumes.cl": "2026-11-18"
  },
  "_offsets": {
-  "https://aromachil.cl": 211,
-  "https://perfumesprodigo.cl": 52,
+  "https://aromachil.cl": 8,
+  "https://perfumesprodigo.cl": 92,
   "https://www.ohparfums.cl": 11,
-  "https://sairam.cl": 3360,
+  "https://sairam.cl": 3400,
   "https://www.cruzyvalencia.cl": 115,
   "https://lacasadelperfume.cl": 920,
   "https://joyperfumes.cl": 1003,
