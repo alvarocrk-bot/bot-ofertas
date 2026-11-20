@@ -18,7 +18,7 @@
  "https://www.nichostore.cl": "shopify",
  "https://www.zonaperfumes.cl": "woo",
  "https://aromachil.cl": "sitemap",
- "https://perfumesprodigo.cl": null,
+ "https://perfumesprodigo.cl": "sitemap",
  "https://www.ohparfums.cl": null,
  "https://sairam.cl": "sitemap",
  "https://perfumeschic.cl": "woo",
@@ -48,10 +48,10 @@
   "https://elreydelosperfumes.cl": "2026-11-18"
  },
  "_offsets": {
-  "https://aromachil.cl": 162,
-  "https://perfumesprodigo.cl": 68,
+  "https://aromachil.cl": 202,
+  "https://perfumesprodigo.cl": 40,
   "https://www.ohparfums.cl": 11,
-  "https://sairam.cl": 4080,
+  "https://sairam.cl": 4120,
   "https://www.cruzyvalencia.cl": 59,
   "https://lacasadelperfume.cl": 920,
   "https://joyperfumes.cl": 1603,
